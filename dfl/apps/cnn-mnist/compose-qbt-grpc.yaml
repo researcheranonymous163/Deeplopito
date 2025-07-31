@@ -1,0 +1,307 @@
+services:
+  # TODO: use specialized https://github.com/webtorrent/bittorrent-tracker, if it support the v2 specification; qBittorrent tracker might act as a peer itself (can it, given that it is not interested in any torrent?).
+  # TODO: use a tracker with UDP support.
+  tracker:
+    # noinspection SpellCheckingInspection
+    image: docker.io/qbittorrentofficial/qbittorrent-nox:4.6.6-1
+    environment:
+      QBT_EULA: accept
+      QBT_WEBUI_PORT: 80
+      PUID: 0
+      PGID: 0
+    # noinspection SpellCheckingInspection
+    command: --relative-fastresume # See https://github.com/qbittorrent/qBittorrent/wiki/How-to-use-portable-mode.
+    volumes:
+    - ./tracker-qBittorrent-config/:/config/qBittorrent/config/
+  
+  node-image-build:
+    build: ./
+    image: localhost/dfl/cnn-mnist/node
+    pull_policy: build
+    restart: no
+    entrypoint: [ sh, -c ]
+    command: [ exit, '0' ]
+  qBittorrent-image-build:
+    build: ./qBittorrent/
+    image: localhost/dfl/cnn-mnist/qbittorrent
+    pull_policy: build
+    restart: no
+    entrypoint: [ sh, -c ]
+    command: [ exit, '0' ]
+  data:
+    image: localhost/dfl/cnn-mnist/node
+    pull_policy: never
+    command: ./data.py
+    environment:
+      DATA_DOWNLOAD: true
+    volumes:
+    - ./data/:/opt/dfl/cnn-mnist/data/
+    - ${RUN_DIR?}/logs/:/opt/dfl/cnn-mnist/logs/
+    depends_on:
+      node-image-build:
+        condition: service_started
+  
+  node-0-qbt: &node_qbt
+    image: localhost/dfl/cnn-mnist/qbittorrent
+    pull_policy: never
+    restart: on-failure
+    depends_on:
+      qBittorrent-image-build:
+        condition: service_started
+    volumes:
+    - node-0:/var/lib/dfl/
+    ports:
+    - 8080:8080
+    healthcheck:
+      test: curl -fsS http://localhost:8080/api/v2/app/version >/dev/null
+      start_period: 3s
+  node-0: &node
+    image: localhost/dfl/cnn-mnist/node
+    command: ./main-compose-qbt-grpc.py
+    pull_policy: never
+    restart: no
+    depends_on:
+      data:
+        condition: service_completed_successfully
+      node-image-build:
+        condition: service_started
+      node-0-qbt:
+        condition: service_healthy
+    environment: &node_env
+      NAME: node-0
+      QBITTORRENTAPI_HOST: node-0-qbt:8080
+      RUN_DIR: ${RUN_DIR?}
+    volumes_from:
+    - data
+    - node-0-qbt
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities:
+            - gpu
+  
+  node-1-qbt:
+    <<: *node_qbt
+    volumes:
+    - node-1:/var/lib/dfl/
+    ports:
+    - 8081:8080
+  node-1:
+    <<: *node
+    environment:
+      <<: *node_env
+      NAME: node-1
+      QBITTORRENTAPI_HOST: node-1-qbt:8080
+    depends_on:
+      data:
+        condition: service_completed_successfully
+      node-image-build:
+        condition: service_started
+      node-1-qbt:
+        condition: service_healthy
+    volumes_from:
+    - data
+    - node-1-qbt
+  
+  node-2-qbt:
+    <<: *node_qbt
+    volumes:
+    - node-2:/var/lib/dfl/
+    ports:
+    - 8082:8080
+  node-2:
+    <<: *node
+    environment:
+      <<: *node_env
+      NAME: node-2
+      QBITTORRENTAPI_HOST: node-2-qbt:8080
+    depends_on:
+      data:
+        condition: service_completed_successfully
+      node-image-build:
+        condition: service_started
+      node-2-qbt:
+        condition: service_healthy
+    volumes_from:
+    - data
+    - node-2-qbt
+  
+  node-3-qbt:
+    <<: *node_qbt
+    volumes:
+    - node-3:/var/lib/dfl/
+    ports:
+    - 8083:8080
+  node-3:
+    <<: *node
+    environment:
+      <<: *node_env
+      NAME: node-3
+      QBITTORRENTAPI_HOST: node-3-qbt:8080
+    depends_on:
+      data:
+        condition: service_completed_successfully
+      node-image-build:
+        condition: service_started
+      node-3-qbt:
+        condition: service_healthy
+    volumes_from:
+    - data
+    - node-3-qbt
+  
+  node-4-qbt:
+    <<: *node_qbt
+    volumes:
+    - node-4:/var/lib/dfl/
+    ports:
+    - 8084:8080
+  node-4:
+    <<: *node
+    environment:
+      <<: *node_env
+      NAME: node-4
+      QBITTORRENTAPI_HOST: node-4-qbt:8080
+    depends_on:
+      data:
+        condition: service_completed_successfully
+      node-image-build:
+        condition: service_started
+      node-4-qbt:
+        condition: service_healthy
+    volumes_from:
+    - data
+    - node-4-qbt
+  
+  node-5-qbt:
+    <<: *node_qbt
+    volumes:
+    - node-5:/var/lib/dfl/
+    ports:
+    - 8085:8080
+  node-5:
+    <<: *node
+    environment:
+      <<: *node_env
+      NAME: node-5
+      QBITTORRENTAPI_HOST: node-5-qbt:8080
+    depends_on:
+      data:
+        condition: service_completed_successfully
+      node-image-build:
+        condition: service_started
+      node-5-qbt:
+        condition: service_healthy
+    volumes_from:
+    - data
+    - node-5-qbt
+  
+  node-6-qbt:
+    <<: *node_qbt
+    volumes:
+    - node-6:/var/lib/dfl/
+    ports:
+    - 8086:8080
+  node-6:
+    <<: *node
+    environment:
+      <<: *node_env
+      NAME: node-6
+      QBITTORRENTAPI_HOST: node-6-qbt:8080
+    depends_on:
+      data:
+        condition: service_completed_successfully
+      node-image-build:
+        condition: service_started
+      node-6-qbt:
+        condition: service_healthy
+    volumes_from:
+    - data
+    - node-6-qbt
+  
+  node-7-qbt:
+    <<: *node_qbt
+    volumes:
+    - node-7:/var/lib/dfl/
+    ports:
+    - 8087:8080
+  node-7:
+    <<: *node
+    environment:
+      <<: *node_env
+      NAME: node-7
+      QBITTORRENTAPI_HOST: node-7-qbt:8080
+    depends_on:
+      data:
+        condition: service_completed_successfully
+      node-image-build:
+        condition: service_started
+      node-7-qbt:
+        condition: service_healthy
+    volumes_from:
+    - data
+    - node-7-qbt
+  
+  node-8-qbt:
+    <<: *node_qbt
+    volumes:
+    - node-8:/var/lib/dfl/
+    ports:
+    - 8088:8080
+  node-8:
+    <<: *node
+    environment:
+      <<: *node_env
+      NAME: node-8
+      QBITTORRENTAPI_HOST: node-8-qbt:8080
+    depends_on:
+      data:
+        condition: service_completed_successfully
+      node-image-build:
+        condition: service_started
+      node-8-qbt:
+        condition: service_healthy
+    volumes_from:
+    - data
+    - node-8-qbt
+  
+  node-9-qbt:
+    <<: *node_qbt
+    volumes:
+    - node-9:/var/lib/dfl/
+    ports:
+    - 8089:8080
+  node-9:
+    <<: *node
+    environment:
+      <<: *node_env
+      NAME: node-9
+      QBITTORRENTAPI_HOST: node-9-qbt:8080
+    depends_on:
+      data:
+        condition: service_completed_successfully
+      node-image-build:
+        condition: service_started
+      node-9-qbt:
+        condition: service_healthy
+    volumes_from:
+    - data
+    - node-9-qbt
+
+volumes:
+  node-0: &node_volume
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  node-1: *node_volume
+  node-2: *node_volume
+  node-3: *node_volume
+  node-4: *node_volume
+  node-5: *node_volume
+  node-6: *node_volume
+  node-7: *node_volume
+  node-8: *node_volume
+  node-9: *node_volume

@@ -1,0 +1,107 @@
+services:
+  node-image-build:
+    build: ./
+    image: localhost/dfl/cnn-mnist/node
+    pull_policy: build
+    restart: no
+    entrypoint: [ sh, -c ]
+    command: [ exit, '0' ]
+  data:
+    image: localhost/dfl/cnn-mnist/node
+    pull_policy: never
+    command: ./data.py
+    environment:
+      DATA_DOWNLOAD: true
+    volumes:
+    - ./data/:/opt/dfl/cnn-mnist/data/
+    - ${RUN_DIR?}/logs/:/opt/dfl/cnn-mnist/logs/
+    depends_on:
+      node-image-build:
+        condition: service_started
+  
+  node-0: &node
+    hostname: node-0
+    image: localhost/dfl/cnn-mnist/node
+    command: ./main-compose-grpc.py
+    pull_policy: never
+    restart: no
+    depends_on:
+      data:
+        condition: service_completed_successfully
+      node-image-build:
+        condition: service_started
+    environment: &node_env
+      RUN_DIR: ${RUN_DIR?}
+    volumes_from:
+    - data
+    volumes:
+    - node-0:/var/lib/dfl/
+    deploy:
+      resources:
+        reservations:
+          devices:
+          - driver: nvidia
+            count: all
+            capabilities:
+            - gpu
+  node-1:
+    <<: *node
+    hostname: node-1
+    volumes:
+    - node-1:/var/lib/dfl/
+  node-2:
+    <<: *node
+    hostname: node-2
+    volumes:
+    - node-2:/var/lib/dfl/
+  node-3:
+    <<: *node
+    hostname: node-3
+    volumes:
+    - node-3:/var/lib/dfl/
+  node-4:
+    <<: *node
+    hostname: node-4
+    volumes:
+    - node-4:/var/lib/dfl/
+  node-5:
+    <<: *node
+    hostname: node-5
+    volumes:
+    - node-5:/var/lib/dfl/
+  node-6:
+    <<: *node
+    hostname: node-6
+    volumes:
+    - node-6:/var/lib/dfl/
+  node-7:
+    <<: *node
+    hostname: node-7
+    volumes:
+    - node-7:/var/lib/dfl/
+  node-8:
+    <<: *node
+    hostname: node-8
+    volumes:
+    - node-8:/var/lib/dfl/
+  node-9:
+    <<: *node
+    hostname: node-9
+    volumes:
+    - node-9:/var/lib/dfl/
+
+volumes:
+  node-0: &node_volume
+    driver: local
+    driver_opts:
+      type: tmpfs
+      device: tmpfs
+  node-1: *node_volume
+  node-2: *node_volume
+  node-3: *node_volume
+  node-4: *node_volume
+  node-5: *node_volume
+  node-6: *node_volume
+  node-7: *node_volume
+  node-8: *node_volume
+  node-9: *node_volume

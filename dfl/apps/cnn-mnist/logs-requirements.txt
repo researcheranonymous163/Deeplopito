@@ -1,0 +1,5 @@
+jsonl2~=1.1
+pandas~=2.2
+pyarrow~=17.0
+plotly~=5.24
+notebook~=7.2

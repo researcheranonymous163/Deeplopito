@@ -1,0 +1,154 @@
+services:
+  # TODO: use specialized https://github.com/webtorrent/bittorrent-tracker, if it support the v2 specification; qBittorrent tracker might act as a peer itself (can it, given that it is not interested in any torrent?).
+  # TODO: use a tracker with UDP support.
+  tracker:
+    # noinspection SpellCheckingInspection
+    image: docker.io/qbittorrentofficial/qbittorrent-nox:4.6.6-1
+    environment:
+      QBT_EULA: accept
+      QBT_WEBUI_PORT: 80
+      PUID: 0
+      PGID: 0
+    # noinspection SpellCheckingInspection
+    command: --relative-fastresume # See https://github.com/qbittorrent/qBittorrent/wiki/How-to-use-portable-mode.
+    volumes:
+    - ./tracker-qBittorrent-config/:/config/qBittorrent/config/
+  image-build:
+    image: localhost/bt-test
+    pull_policy: build
+    build: ./
+    restart: no
+    entrypoint: [ sh, -c ]
+    command: exit 0
+  nats:
+    restart: always
+    image: nats:2.10.21-alpine3.20
+    command: --jetstream --store_dir /var/lib/nats/ -m 8222
+    ports:
+    - 4222:4222
+    healthcheck:
+      test: wget http://localhost:8222/healthz -q -S -O -
+      start_period: 3s
+      retries: 3
+      timeout: 3s
+      interval: 14s
+  n0:
+    image: localhost/bt-test
+    pull_policy: build
+    ports:
+    - 8080:8080
+    depends_on:
+      image-build:
+        condition: service_started
+      nats:
+        condition: service_healthy
+    environment:
+      NAME: n0
+  n1:
+    image: localhost/bt-test
+    pull_policy: build
+    ports:
+    - 8081:8080
+    depends_on:
+      image-build:
+        condition: service_started
+      nats:
+        condition: service_healthy
+    environment:
+      NAME: n1
+  n2:
+    image: localhost/bt-test
+    pull_policy: build
+    ports:
+    - 8082:8080
+    depends_on:
+      image-build:
+        condition: service_started
+      nats:
+        condition: service_healthy
+    environment:
+      NAME: n2
+  n3:
+    image: localhost/bt-test
+    pull_policy: build
+    ports:
+    - 8083:8080
+    depends_on:
+      image-build:
+        condition: service_started
+      nats:
+        condition: service_healthy
+    environment:
+      NAME: n3
+  n4:
+    image: localhost/bt-test
+    pull_policy: build
+    ports:
+    - 8084:8080
+    depends_on:
+      image-build:
+        condition: service_started
+      nats:
+        condition: service_healthy
+    environment:
+      NAME: n4
+  n5:
+    image: localhost/bt-test
+    pull_policy: build
+    ports:
+    - 8085:8080
+    depends_on:
+      image-build:
+        condition: service_started
+      nats:
+        condition: service_healthy
+    environment:
+      NAME: n5
+  n6:
+    image: localhost/bt-test
+    pull_policy: build
+    ports:
+    - 8086:8080
+    depends_on:
+      image-build:
+        condition: service_started
+      nats:
+        condition: service_healthy
+    environment:
+      NAME: n6
+  n7:
+    image: localhost/bt-test
+    pull_policy: build
+    ports:
+    - 8087:8080
+    depends_on:
+      image-build:
+        condition: service_started
+      nats:
+        condition: service_healthy
+    environment:
+      NAME: n7
+  n8:
+    image: localhost/bt-test
+    pull_policy: build
+    ports:
+    - 8088:8080
+    depends_on:
+      image-build:
+        condition: service_started
+      nats:
+        condition: service_healthy
+    environment:
+      NAME: n8
+  n9:
+    image: localhost/bt-test
+    pull_policy: build
+    ports:
+    - 8089:8080
+    depends_on:
+      image-build:
+        condition: service_started
+      nats:
+        condition: service_healthy
+    environment:
+      NAME: n9
