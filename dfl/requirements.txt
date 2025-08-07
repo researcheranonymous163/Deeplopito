@@ -1,2 +1,0 @@
--e ./
-grpcio-tools~=1.68
