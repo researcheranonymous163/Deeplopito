@@ -23,7 +23,7 @@ from baseModel import cnn_partitions, all_layers_bert
 from config_folder import num_rounds, num_epochs
 from config_folder import stages_client, num_clients, neighbour_clients
 
-import logger
+ 
 import shutil
 import numpy as np
 
