@@ -5,13 +5,11 @@ Follow these steps to launch a 5-client split training environment quickly.
 ### A. Using Docker Compose
 1- Clone the repository
 * `git clone https://github.com/researcheranonymous163/Deeplopito`
-* `cd splitted_training`
 * `chmod +x docker-entrypoint.sh`
 * `docker-compose up --build`
 
 ### B. Using Docker Swarm
 Build the Docker image
-* `cd splitted_training`
 * `chmod +x docker-entrypoint.sh`
 * `docker build -t split-training:latest .`
 * `sudo docker stack deploy -c docker-compose-swarm_5_client.yml my_stack`
