@@ -1,0 +1,143 @@
+version: '3.8'
+x-image: &image
+  image: 10.10.213.124:5000/splitted_dfl:v3.719
+
+x-deploy-base: &deploy-base
+  replicas: 1
+  endpoint_mode: dnsrr
+  restart_policy:
+    condition: none
+
+# Resource limits for specific nodes
+x-deploy-with-tiny: &deploy-with-tiny
+  replicas: 1
+  endpoint_mode: dnsrr
+  restart_policy:
+    condition: none
+  resources:
+    limits:
+      cpus: '2'
+      memory: 2g
+
+# Resource limits for specific nodes
+x-deploy-with-medium: &deploy-with-medium
+  replicas: 1
+  endpoint_mode: dnsrr
+  restart_policy:
+    condition: none
+  resources:
+    limits:
+      cpus: '4'
+      memory: 4g
+
+
+# Resource limits for specific nodes
+x-deploy-with-large: &deploy-with-large
+  replicas: 1
+  endpoint_mode: dnsrr
+  restart_policy:
+    condition: none
+  resources:
+    limits:
+      cpus: '4'
+      memory: 8g
+
+
+# Resource limits for specific nodes
+x-deploy-with-xlarge: &deploy-with-xlarge
+  replicas: 1
+  endpoint_mode: dnsrr
+  restart_policy:
+    condition: none
+  resources:
+    limits:
+      cpus: '8'
+      memory: 16g
+
+# Common service configuration
+x-service-common: &service-common
+  <<: *image
+  restart: "no"
+  env_file:
+    - .env
+  networks:
+    - communication
+  volumes:
+    - accuracy_results:/accuracy_results
+    - data:/data
+    - model:/model
+    - log_time:/log_time
+  cap_add:
+    - NET_ADMIN
+
+services:
+  client1:
+    <<: *service-common
+    environment:
+      - CLIENT_NUMBER=1
+      - CLIENT_NAME=client1
+    deploy:
+      <<: *deploy-base
+      placement:
+        constraints:
+          - node.labels.node == node1
+
+  client2:
+    <<: *service-common
+    environment:
+      - CLIENT_NUMBER=2
+      - CLIENT_NAME=client2
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    deploy:
+      <<: *deploy-base
+      placement:
+        constraints:
+          - node.labels.node == node2
+
+  client3:
+    <<: *service-common
+    environment:
+      - CLIENT_NUMBER=3
+      - CLIENT_NAME=client3
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    deploy:
+      <<: *deploy-base
+      placement:
+        constraints:
+          - node.labels.node == node3
+
+  client4:
+    <<: *service-common
+    environment:
+      - CLIENT_NUMBER=4
+      - CLIENT_NAME=client4
+    deploy:
+      <<: *deploy-with-xlarge
+      placement:
+        constraints:
+          - node.labels.node == node4
+
+  client5:
+    <<: *service-common
+    environment:
+
+      - CLIENT_NUMBER=5
+      - CLIENT_NAME=client5
+    deploy:
+      <<: *deploy-with-xlarge
+      placement:
+        constraints:
+          - node.labels.node == node5
+
+
+networks:
+  communication:
+    driver: overlay
+
+volumes:
+  accuracy_results:
+  data:
+  model:
+  log_time:

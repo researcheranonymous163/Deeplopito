@@ -1,0 +1,6 @@
+./__pycashe__
+./data
+./model
+./simulateModel/data
+./simulateModel/model
+./optimization

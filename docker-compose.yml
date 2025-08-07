@@ -1,0 +1,118 @@
+services:
+  client1:
+    build:
+      context: .
+      dockerfile: Dockerfile.dfl
+    container_name: client1
+    pull_policy: build
+    environment:
+      - CLIENT_NUMBER=1
+      - CLIENT_NAME=client1
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    env_file:
+      - .env
+    networks:
+      - communication
+    volumes:
+      - ./simulateModel/accuracy_results:/accuracy_results
+      - ./simulateModel/data:/data
+      - ./simulateModel/model:/model
+      - ./simulateModel/log_time:/log_time
+    cap_add:
+      - NET_ADMIN
+  client2:
+    build:
+      context: .
+      dockerfile: Dockerfile.dfl
+    container_name: client2
+    pull_policy: build
+    environment:
+      - CLIENT_NUMBER=2
+      - CLIENT_NAME=client2
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    env_file:
+      - .env
+    networks:
+      - communication
+    volumes:
+      - ./simulateModel/accuracy_results:/accuracy_results
+      - ./simulateModel/data:/data
+      - ./simulateModel/model:/model
+      - ./simulateModel/log_time:/log_time
+    cap_add:
+      - NET_ADMIN
+
+  client3:
+    build:
+      context: .
+      dockerfile: Dockerfile.dfl
+    container_name: client3
+    pull_policy: build
+    environment:
+      - CLIENT_NUMBER=3
+      - CLIENT_NAME=client3
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    env_file:
+      - .env
+    networks:
+      - communication
+    volumes:
+      - ./simulateModel/accuracy_results:/accuracy_results
+      - ./simulateModel/data:/data
+      - ./simulateModel/model:/model
+      - ./simulateModel/log_time:/log_time
+    cap_add:
+      - NET_ADMIN
+
+  client4:
+    build:
+      context: .
+      dockerfile: Dockerfile.dfl
+    container_name: client4
+    pull_policy: build
+    environment:
+      - CLIENT_NUMBER=4
+      - CLIENT_NAME=client4
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    env_file:
+      - .env
+    networks:
+      - communication
+    volumes:
+      - ./simulateModel/accuracy_results:/accuracy_results
+      - ./simulateModel/data:/data
+      - ./simulateModel/model:/model
+      - ./simulateModel/log_time:/log_time
+    cap_add:
+      - NET_ADMIN
+  client5:
+    build:
+      context: .
+      dockerfile: Dockerfile.dfl
+    container_name: client5
+    pull_policy: build
+    environment:
+      - CLIENT_NUMBER=5
+      - CLIENT_NAME=client5
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+    env_file:
+      - .env
+    networks:
+      - communication
+    volumes:
+      - ./simulateModel/accuracy_results:/accuracy_results
+      - ./simulateModel/data:/data
+      - ./simulateModel/model:/model
+      - ./simulateModel/log_time:/log_time
+    cap_add:
+      - NET_ADMIN
+
+networks:
+  communication:
+    driver: bridge
+
