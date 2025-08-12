@@ -68,4 +68,14 @@ Each partition has two stages: forward and backward. To ensure they run on the s
 
 # Example Configurations
 
-several sample execution_config dictionaries located in a Python file "example_configurations" and you can use to launch split training:
+several sample execution_config dictionaries located in a Python file "example_configurations" and you can use to launch split training.
+
+
+
+
+
+In simulateModel/requirements.txt, you can see a link to another repository from the same GitHub account, which contains a BitTorrent package for communication:
+`dfl @ git+https://github.com/researcheranonymous163/torent_dfl.git@2047325a846970b8e65063d42c71c856a26aee73`
+Repository link: https://github.com/researcheranonymous163/torent_dfl
+
+
