@@ -36,14 +36,14 @@ for change configuration of program you can change .env file  and config_stages_
 #### 1. Partition Configuration
 
 * Each model is divided into N partitions. For split training, you must create an execution_config list of length M, where M is the number of clients.
-* Each sublist in SIMULATION_STAGES_CLIENTS and set in .env file corresponds to the tasks assigned to a specific client.
+* Each sublist in STAGES_CLIENTS and set in .env file corresponds to the tasks assigned to a specific client.
 * Tasks are labeled as "{client_id}_{stage_id}":
   * client_id: The owner of the partition (which client runs it).
   * stage_id: The position of this partition in the overall pipeline.
 
 ****Example: CNN model split into 4 client partitions (8 total forward/backward stages)****
 
-    SIMULATION_STAGES_CLIENTS = [
+    STAGES_CLIENTS = [
     ['1_1', '1_2', '4_3', '1_4', '1_5', '4_6', '1_7', '1_8'],  # Client 1 tasks
     ['2_1', '2_2', '1_3', '2_4', '2_5', '1_6', '2_7', '2_8'],  # Client 2 tasks
     ['3_1', '5_2', '5_3', '3_4', '3_5', '5_6', '5_7', '3_8'],  # Client 3 tasks
@@ -87,7 +87,7 @@ several sample execution_config dictionaries located in a Python file "example_c
 
 
 
-In simulateModel/requirements.txt, you can see a link to another repository from the same GitHub account, which contains a BitTorrent package for communication:
+In src/requirements.txt, you can see a link to another repository from the same GitHub account, which contains a BitTorrent package for communication:
 `dfl @ git+https://github.com/researcheranonymous163/torent_dfl.git@2047325a846970b8e65063d42c71c856a26aee73`
 Repository link: https://github.com/researcheranonymous163/torent_dfl
 
