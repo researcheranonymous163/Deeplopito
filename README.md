@@ -28,7 +28,7 @@ Follow these steps to launch a 5-client split training environment quickly.
 * Monitor your services (on the master): `docker stack services my_stack`
 
 
-for change configuration of program you can change .env file.
+for change configuration of program you can change .env file  and config_stages_client.py .
 # Split Training Execution Configuration
 
 **This section describes how to configure and execute a split training program across multiple clients. It covers partition assignment, stage pairing, and client ownership to ensure proper forward and backward pass execution.**
