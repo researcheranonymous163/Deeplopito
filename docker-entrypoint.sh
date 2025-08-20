@@ -13,9 +13,9 @@ fi
 
 
 if [ "${CAPTURE_EXECUTION_TIME}" = "True" ];then
-  python -m simulateModel.runTimeRecorderBert
+  python -m src.runTimeRecorderBert
 fi
 
 if [ "${RUN_MAIN_PROGRAM}" = "True" ];then
-  python -m simulateModel.algorithm
+  python -m src.algorithm
 fi

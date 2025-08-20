@@ -15,10 +15,10 @@ services:
     networks:
       - communication
     volumes:
-      - ./simulateModel/accuracy_results:/accuracy_results
-      - ./simulateModel/data:/data
-      - ./simulateModel/model:/model
-      - ./simulateModel/log_time:/log_time
+      - ./src/accuracy_results:/accuracy_results
+      - ./src/data:/data
+      - ./src/model:/model
+      - ./src/log_time:/log_time
     cap_add:
       - NET_ADMIN
   client2:
@@ -37,10 +37,10 @@ services:
     networks:
       - communication
     volumes:
-      - ./simulateModel/accuracy_results:/accuracy_results
-      - ./simulateModel/data:/data
-      - ./simulateModel/model:/model
-      - ./simulateModel/log_time:/log_time
+      - ./src/accuracy_results:/accuracy_results
+      - ./src/data:/data
+      - ./src/model:/model
+      - ./src/log_time:/log_time
     cap_add:
       - NET_ADMIN
 
@@ -60,10 +60,10 @@ services:
     networks:
       - communication
     volumes:
-      - ./simulateModel/accuracy_results:/accuracy_results
-      - ./simulateModel/data:/data
-      - ./simulateModel/model:/model
-      - ./simulateModel/log_time:/log_time
+      - ./src/accuracy_results:/accuracy_results
+      - ./src/data:/data
+      - ./src/model:/model
+      - ./src/log_time:/log_time
     cap_add:
       - NET_ADMIN
 
@@ -83,10 +83,10 @@ services:
     networks:
       - communication
     volumes:
-      - ./simulateModel/accuracy_results:/accuracy_results
-      - ./simulateModel/data:/data
-      - ./simulateModel/model:/model
-      - ./simulateModel/log_time:/log_time
+      - ./src/accuracy_results:/accuracy_results
+      - ./src/data:/data
+      - ./src/model:/model
+      - ./src/log_time:/log_time
     cap_add:
       - NET_ADMIN
   client5:
@@ -105,10 +105,10 @@ services:
     networks:
       - communication
     volumes:
-      - ./simulateModel/accuracy_results:/accuracy_results
-      - ./simulateModel/data:/data
-      - ./simulateModel/model:/model
-      - ./simulateModel/log_time:/log_time
+      - ./src/accuracy_results:/accuracy_results
+      - ./src/data:/data
+      - ./src/model:/model
+      - ./src/log_time:/log_time
     cap_add:
       - NET_ADMIN
 
