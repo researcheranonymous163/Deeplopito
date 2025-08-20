@@ -24,7 +24,7 @@ sim_config = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(sim_config)
 SIMULATION_STAGES_CLIENTS = sim_config.SIMULATION_STAGES_CLIENTS
 
-stages_clients = SIMULATION_STAGES_CLIENTS
+stages_client = SIMULATION_STAGES_CLIENTS
 
 # Expose these variables for import
 __all__ = ["dataset_name", "num_rounds", "num_epochs" , "n_spit_dataset" , "num_clients","priorities", "neighbour_clients" , "sleep_time" , "stages_client"]
