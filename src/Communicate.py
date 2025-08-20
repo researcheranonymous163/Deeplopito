@@ -14,7 +14,7 @@ class CommunicatorType(Enum):
     BITTORRENT= "BITTORRENT"
 
 
-number_all_clients = int(os.environ.get("SIMULATION_NUM_CLIENTS"))
+number_all_clients = int(os.environ.get("NUM_CLIENTS"))
 
 
 class Communicator:
