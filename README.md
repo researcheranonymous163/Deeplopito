@@ -9,10 +9,31 @@ Follow these steps to launch a 5-client split training environment quickly.
 * `docker-compose up --build`
 
 ### B. Using Docker Swarm
-Build the Docker image
-* `chmod +x docker-entrypoint.sh`
-* `docker build -t split-training:latest .`
-* `sudo docker stack deploy -c docker-compose-swarm_5_client.yml my_stack`
+Make the entrypoint script executable (only needed once):
+`chmod +x docker-entrypoint.sh`
+
+Build and push the Docker image (to a registry server or Docker Hub):
+`docker build -t <your_dockerhub_username>/<image_name>:<tag> .`
+`docker push <your_dockerhub_username>/<image_name>:<tag>`
+Ensure your docker-compose-swarm_5_client.yml references the same image and tag. You can also modify services in the file to match your custom setup.
+
+Initialize the Swarm on the master node:
+`docker swarm init`
+
+Get the worker join command (on the master):
+`docker swarm join-token worker`
+
+Join worker nodes to the Swarm (run the command from step 4 on each worker):
+`docker swarm join --token <token_from_master> <manager_ip>:2377`
+
+Verify that all nodes have joined (on the master):
+`docker node ls`
+
+Deploy the stack (on the master):
+`docker stack deploy -c docker-compose-swarm_5_client.yml my_stack`
+
+Monitor your services (on the master):
+`docker stack services my_stack`
 
 
 for change configuration of program you can change .env file.
